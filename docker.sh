@@ -1,4 +1,4 @@
-#!/bin/bash -e
+!/bin/bash -e
 # This script is an experiment to clone litecoin into a 
 # brand new coin + blockchain.
 # The script will perform the following steps:
@@ -229,7 +229,7 @@ newcoin_replace_vars()
     # now replace all litecoin references to the new coin name
     for i in $(find . -type f | grep -v "^./.git"); do
         $SED -i "s/Litecoin/$COIN_NAME/g" $i
-	$SED -i "s/litecoin/$COIN_NAME_LOWER/g" $i
+        $SED -i "s/litecoin/$COIN_NAME_LOWER/g" $i
         $SED -i "s/LITECOIN/$COIN_NAME_UPPER/g" $i
         $SED -i "s/LTC/$COIN_UNIT/g" $i
     done
