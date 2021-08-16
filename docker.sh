@@ -1,4 +1,4 @@
-#!/bin/bash -e
+!/bin/bash -e
 # This script is an experiment to clone litecoin into a 
 # brand new coin + blockchain.
 # The script will perform the following steps:
