@@ -239,7 +239,7 @@ newcoin_replace_vars()
 
     $SED -i "s/1317972665/$TIMESTAMP/" src/chainparams.cpp
 
-    $SED -i "s;NY Times 05/Oct/2011 Steve Jobs, Apple�s Visionary, Dies at 56;$PHRASE;" src/chainparams.cpp
+    $SED -i "s;NY Times 05/Oct/2011 Steve Jobs, Apple’s Visionary, Dies at 56;$PHRASE;" src/chainparams.cpp
     $SED -i "s;0000000000000000000000000000000000000000000002ee655bf00bf13b4cca;$CHAINWORK;" src/chainparams.cpp
 
     $SED -i "s/= 9333;/= $MAINNET_PORT;/" src/chainparams.cpp
