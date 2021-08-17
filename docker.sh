@@ -14,38 +14,49 @@
 # CHAIN variable below
 
 # change the following variables to match your new coin
-COIN_NAME="Picscoin"
-COIN_UNIT="PIC"
-# 42 million coins at total (litecoin total supply is 84000000)
-TOTAL_SUPPLY=42000000
-MAINNET_PORT="1337"
-TESTNET_PORT="1888"
-PHRASE="Marijuana Retail Store Lottery in Canada 1/7/2019"
+
+# change the following variables to match your new coin
+COIN_NAME="NWAcoin"
+COIN_UNIT="NWA"
+# 42 million coins at total (freecoins total supply is 84000000)
+TOTAL_SUPPLY=1888000000
+MAINNET_PORT="1061"
+TESTNET_PORT="1060"
+MAINNETRPC_PORT="1062"
+PHRASE="Provigen Networks: Now accepting reversearonis!"
 # First letter of the wallet address. Check https://en.bitcoin.it/wiki/Base58Check_encoding
-PUBKEY_CHAR="55"
+PUBKEY_CHAR="24"
 # number of blocks to wait to be able to spend coinbase UTXO's
-COINBASE_MATURITY=10
+COINBASE_MATURITY=50
 # leave CHAIN empty for main network, -regtest for regression network and -testnet for test network
 CHAIN=""
 # this is the amount of coins to get as a reward of mining the block of height 1. if not set this will default to 50
 PREMINED_AMOUNT=1000000
-
+CHAINWORK="0000000000000000000000000000000000000000000002ee655bf00bf13b4cca"
+# warning: change this to your own pubkey to get the genesis block mining reward
+GENESIS_REWARD_PUBKEY=044e0d4bc823e20e14d66396a64960c993585400c53f1e6decb273f249bfeba0e71f140ffa7316f2cdaaae574e7d72620538c3e7791ae9861dfe84dd2955fc85e8
+SEEDNODEDNSADD=seed.pgn.one
+SEEDNODEDNSADD1=seed.mchub.ca
+SEEDNODEDNSADD2=seed.picscoins.org
+SEEDNODEDNSADD3=seed.thecrypto.ca
 # warning: change this to your own pubkey to get the genesis block mining reward
 GENESIS_REWARD_PUBKEY=044e0d4bc823e20e14d66396a64960c993585400c53f1e6decb273f249bfeba0e71f140ffa7316f2cdaaae574e7d72620538c3e7791ae9861dfe84dd2955fc85e8
 
 # dont change the following variables unless you know what you are doing
-LITECOIN_BRANCH=0.14
+LITECOIN_BRANCH=0.18
 GENESISHZERO_REPOS=https://github.com/lhartikk/GenesisH0
-LITECOIN_REPOS=https://github.com/litecoin-project/litecoin.git
+LITECOIN_REPOS=https://github.com/minblock/litecoin-project.git
 LITECOIN_PUB_KEY=040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9
 LITECOIN_MERKLE_HASH=97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd4ced9
 LITECOIN_MAIN_GENESIS_HASH=12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2
+LITECOIN_BIP34_HASH=fa09d204a83a768ed5a7c8d441fa62f2043abf420cff1226c7b4329aeb9d51cf
 LITECOIN_TEST_GENESIS_HASH=4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0
 LITECOIN_REGTEST_GENESIS_HASH=530827f38f93b43ed12af0b3ad25a288dc02ed74d6d7857862df51fc56c416f9
-MINIMUM_CHAIN_WORK_MAIN=0x000000000000000000000000000000000000000000000006805c7318ce2736c0
-MINIMUM_CHAIN_WORK_TEST=0x000000000000000000000000000000000000000000000000000000054cb9e7a0
+MINIMUM_CHAIN_WORK_MAIN=0x0000000000000000000000000000000000000000000002ee655bf00bf13b4cca
+MINIMUM_CHAIN_WORK_TEST=0x0000000000000000000000000000000000000000000000000035ed7ece35dc93
 COIN_NAME_LOWER=$(echo $COIN_NAME | tr '[:upper:]' '[:lower:]')
 COIN_NAME_UPPER=$(echo $COIN_NAME | tr '[:lower:]' '[:upper:]')
+UNIT_NAME_LOWER=$(echo $COIN_UNIT | tr '[:upper:]' '[:lower:]')
 DIRNAME=$(dirname $0)
 DOCKER_NETWORK="172.18.0"
 DOCKER_IMAGE_LABEL="newcoin-env"
@@ -209,25 +220,32 @@ newcoin_replace_vars()
     for i in $(find . -type f | grep -v "^./.git" | grep litecoin); do
         git mv $i $(echo $i| $SED "s/litecoin/$COIN_NAME_LOWER/")
     done
+    # fix seeds
+    $SED -i "s;seed-a.litecoin.loshan.co.uk;$SEEDNODEDNSADD;" src/chainparams.cpp
+    $SED -i "s;dnsseed.thrasher.io;$SEEDNODEDNSADD1;" src/chainparams.cpp
+    $SED -i "s;dnsseed.litecointools.com;$SEEDNODEDNSADD2;" src/chainparams.cpp
+    $SED -i "s;dnsseed.litecoinpool.org;$SEEDNODEDNSADD3;" src/chainparams.cpp
 
     # now replace all litecoin references to the new coin name
     for i in $(find . -type f | grep -v "^./.git"); do
         $SED -i "s/Litecoin/$COIN_NAME/g" $i
-        $SED -i "s/litecoin/$COIN_NAME_LOWER/g" $i
+	$SED -i "s/litecoin/$COIN_NAME_LOWER/g" $i
         $SED -i "s/LITECOIN/$COIN_NAME_UPPER/g" $i
         $SED -i "s/LTC/$COIN_UNIT/g" $i
     done
 
+    $SED -i "s/9332/$MAINNETRPC_PORT/" src/chainparamsbase.cpp
     $SED -i "s/84000000/$TOTAL_SUPPLY/" src/amount.h
     $SED -i "s/1,48/1,$PUBKEY_CHAR/" src/chainparams.cpp
 
     $SED -i "s/1317972665/$TIMESTAMP/" src/chainparams.cpp
 
     $SED -i "s;NY Times 05/Oct/2011 Steve Jobs, Apple’s Visionary, Dies at 56;$PHRASE;" src/chainparams.cpp
+    $SED -i "s;0000000000000000000000000000000000000000000002ee655bf00bf13b4cca;$CHAINWORK;" src/chainparams.cpp
 
     $SED -i "s/= 9333;/= $MAINNET_PORT;/" src/chainparams.cpp
     $SED -i "s/= 19335;/= $TESTNET_PORT;/" src/chainparams.cpp
-
+    $SED -i "s/= 9332;/= $MAINNETRPC_PORT;/" src/chainparamsbase.cpp
     $SED -i "s/$LITECOIN_PUB_KEY/$MAIN_PUB_KEY/" src/chainparams.cpp
     $SED -i "s/$LITECOIN_MERKLE_HASH/$MERKLE_HASH/" src/chainparams.cpp
     $SED -i "s/$LITECOIN_MERKLE_HASH/$MERKLE_HASH/" src/qt/test/rpcnestedtests.cpp
@@ -235,12 +253,21 @@ newcoin_replace_vars()
     $SED -i "0,/$LITECOIN_MAIN_GENESIS_HASH/s//$MAIN_GENESIS_HASH/" src/chainparams.cpp
     $SED -i "0,/$LITECOIN_TEST_GENESIS_HASH/s//$TEST_GENESIS_HASH/" src/chainparams.cpp
     $SED -i "0,/$LITECOIN_REGTEST_GENESIS_HASH/s//$REGTEST_GENESIS_HASH/" src/chainparams.cpp
-
+    $SED -i "0,/ltc/s//$UNIT_NAME_LOWER/" src/chainparams.cpp
+    #thesegwitlaunch
+    $SED -i "s/1485561600/$TIMESTAMP/" src/chainparams.cpp
+    #segwitend 08/08/2021 @ 8:08am (UTC)
+    $SED -i "s,218579,0,g" src/chainparams.cpp
+    $SED -i "s,1517356801,1628410088,g" src/chainparams.cpp
+    $SED -i "s/m_assumed_blockchain_size = 22/m_assumed_blockchain_size = 0/" src/chainparams.cpp
+    $SED -i "s/m_assumed_chain_state_size = 3/m_assumed_chain_state_size = 0/" src/chainparams.cpp
+   
     $SED -i "0,/2084524493/s//$MAIN_NONCE/" src/chainparams.cpp
     $SED -i "0,/293345/s//$TEST_NONCE/" src/chainparams.cpp
     $SED -i "0,/1296688602, 0/s//1296688602, $REGTEST_NONCE/" src/chainparams.cpp
     $SED -i "0,/0x1e0ffff0/s//$BITS/" src/chainparams.cpp
-
+    $SED -i "s/$LITECOIN_BIP34_HASH/$MAIN_GENESIS_HASH/" src/chainparams.cpp
+    $SED -i "0,/a601455787cb65ffc325dda4751a99cf01d1567799ec4b04f45bb05f9ef0cbde//$MAIN_GENESIS_HASH/" src/chainparams.cpp
     $SED -i "s,vSeeds.push_back,//vSeeds.push_back,g" src/chainparams.cpp
 
     if [ -n "$PREMINED_AMOUNT" ]; then
@@ -250,10 +277,12 @@ newcoin_replace_vars()
     $SED -i "s/COINBASE_MATURITY = 100/COINBASE_MATURITY = $COINBASE_MATURITY/" src/consensus/consensus.h
 
     # reset minimum chain work to 0
-    $SED -i "s/$MINIMUM_CHAIN_WORK_MAIN/0x00/" src/chainparams.cpp
-    $SED -i "s/$MINIMUM_CHAIN_WORK_TEST/0x00/" src/chainparams.cpp
+    $SED -i "s/$MINIMUM_CHAIN_WORK_MAIN/0x0000000000000000000000000000000000000000000000000000000000000000/" src/chainparams.cpp
+    $SED -i "s/$MINIMUM_CHAIN_WORK_TEST/0x0000000000000000000000000000000000000000000000000000000000000000/" src/chainparams.cpp
 
     # change bip activation heights
+    # bip 16
+    $SED -i "s/1485561600/0/" src/chainparams.cpp
     # bip 34
     $SED -i "s/710000/0/" src/chainparams.cpp
     # bip 65
@@ -345,13 +374,13 @@ case $1 in
         docker_build_image
         generate_genesis_block
         newcoin_replace_vars
-        build_new_coin
-        docker_create_network
+       # build_new_coin
+       # docker_create_network
 
-        docker_run_node 2 "cd /$COIN_NAME_LOWER ; ./src/${COIN_NAME_LOWER}d $CHAIN -listen -noconnect -bind=$DOCKER_NETWORK.2 -addnode=$DOCKER_NETWORK.1 -addnode=$DOCKER_NETWORK.3 -addnode=$DOCKER_NETWORK.4 -addnode=$DOCKER_NETWORK.5" &
-        docker_run_node 3 "cd /$COIN_NAME_LOWER ; ./src/${COIN_NAME_LOWER}d $CHAIN -listen -noconnect -bind=$DOCKER_NETWORK.3 -addnode=$DOCKER_NETWORK.1 -addnode=$DOCKER_NETWORK.2 -addnode=$DOCKER_NETWORK.4 -addnode=$DOCKER_NETWORK.5" &
-        docker_run_node 4 "cd /$COIN_NAME_LOWER ; ./src/${COIN_NAME_LOWER}d $CHAIN -listen -noconnect -bind=$DOCKER_NETWORK.4 -addnode=$DOCKER_NETWORK.1 -addnode=$DOCKER_NETWORK.2 -addnode=$DOCKER_NETWORK.3 -addnode=$DOCKER_NETWORK.5" &
-        docker_run_node 5 "cd /$COIN_NAME_LOWER ; ./src/${COIN_NAME_LOWER}d $CHAIN -listen -noconnect -bind=$DOCKER_NETWORK.5 -addnode=$DOCKER_NETWORK.1 -addnode=$DOCKER_NETWORK.2 -addnode=$DOCKER_NETWORK.3 -addnode=$DOCKER_NETWORK.4" &
+        #docker_run_node 2 "cd /$COIN_NAME_LOWER ; ./src/${COIN_NAME_LOWER}d $CHAIN -listen -noconnect -bind=$DOCKER_NETWORK.2 -addnode=$DOCKER_NETWORK.1 -addnode=$DOCKER_NETWORK.3 -addnode=$DOCKER_NETWORK.4 -addnode=$DOCKER_NETWORK.5" &
+        #docker_run_node 3 "cd /$COIN_NAME_LOWER ; ./src/${COIN_NAME_LOWER}d $CHAIN -listen -noconnect -bind=$DOCKER_NETWORK.3 -addnode=$DOCKER_NETWORK.1 -addnode=$DOCKER_NETWORK.2 -addnode=$DOCKER_NETWORK.4 -addnode=$DOCKER_NETWORK.5" &
+        #docker_run_node 4 "cd /$COIN_NAME_LOWER ; ./src/${COIN_NAME_LOWER}d $CHAIN -listen -noconnect -bind=$DOCKER_NETWORK.4 -addnode=$DOCKER_NETWORK.1 -addnode=$DOCKER_NETWORK.2 -addnode=$DOCKER_NETWORK.3 -addnode=$DOCKER_NETWORK.5" &
+        #docker_run_node 5 "cd /$COIN_NAME_LOWER ; ./src/${COIN_NAME_LOWER}d $CHAIN -listen -noconnect -bind=$DOCKER_NETWORK.5 -addnode=$DOCKER_NETWORK.1 -addnode=$DOCKER_NETWORK.2 -addnode=$DOCKER_NETWORK.3 -addnode=$DOCKER_NETWORK.4" &
 
         echo "Docker containers should be up and running now. You may run the following command to check the network status:
 for i in \$(docker ps -q); do docker exec \$i /$COIN_NAME_LOWER/src/${COIN_NAME_LOWER}-cli $CHAIN getinfo; done"
@@ -369,4 +398,7 @@ Usage: $0 (start|stop|remove_nodes|clean_up)
 EOF
     ;;
 esac
+
+
+
 
