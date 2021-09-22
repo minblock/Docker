@@ -61,8 +61,8 @@ docker_build_image()
         if [ ! -f $DOCKER_IMAGE_LABEL/Dockerfile ]; then
             mkdir -p $DOCKER_IMAGE_LABEL
             cat <<EOF > $DOCKER_IMAGE_LABEL/Dockerfile
-FROM ubuntu:16.04
-RUN echo deb http://ppa.launchpad.net/bitcoin/bitcoin/ubuntu xenial main >> /etc/apt/sources.list
+FROM ubuntu:14.04
+RUN echo deb http://ppa.launchpad.net/bitcoin/bitcoin/ubuntu trusty main >> /etc/apt/sources.list
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D46F45428842CE5E
 RUN apt-get update
 RUN apt-get -y install ccache curl g++-multilib git-core pkg-config autoconf faketime bsdmainutils binutils-gold ca-certificates python git libboost-system1.58.0 libboost-filesystem1.58.0 libboost-program-options1.58.0 libboost-thread1.58.0 libboost-chrono1.58.0 libssl1.0.0 libevent-pthreads-2.0-5 libevent-2.0-5 build-essential libtool autotools-dev automake libssl-dev libevent-dev libboost-system-dev libboost-filesystem-dev libboost-chrono-dev libboost-program-options-dev libboost-test-dev libboost-thread-dev libdb4.8-dev libdb4.8++-dev libminiupnpc-dev libzmq3-dev libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev python-pip
