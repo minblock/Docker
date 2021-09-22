@@ -204,12 +204,12 @@ newcoin_replace_vars()
 
     # first rename all directories
     for i in $(find . -type d | grep -v "^./.git" | grep litecoin); do 
-        git mv $i $(echo $i| $SED "s/litecoin/$COIN_NAME_LOWER/")
+        git mv $i $(echo $i| $SED "s/sovcoin/$COIN_NAME_LOWER/")
     done
 
     # then rename all files
     for i in $(find . -type f | grep -v "^./.git" | grep litecoin); do
-        git mv $i $(echo $i| $SED "s/litecoin/$COIN_NAME_LOWER/")
+        git mv $i $(echo $i| $SED "s/sovcoin/$COIN_NAME_LOWER/")
     done
 
     # now replace all litecoin references to the new coin name
