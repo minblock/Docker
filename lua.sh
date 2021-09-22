@@ -38,7 +38,7 @@ GENESIS_REWARD_PUBKEY=46e05270f6d736f006cb682c9e15998e3505e6185475f7e1a9bc5a4965
 # dont change the following variables unless you know what you are doing
 LITECOIN_BRANCH=master
 GENESISHZERO_REPOS=https://github.com/lhartikk/GenesisH0
-LITECOIN_REPOS=https://github.com/sovX/sov/
+LITECOIN_REPOS=https://github.com/SovCoinX/SovCoin/
 LITECOIN_PUB_KEY=040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9
 LITECOIN_MERKLE_HASH=999ad67d669569e6168d11f92cd4ee8a056a2a5754253164ec8fb9593f923267
 LITECOIN_MAIN_GENESIS_HASH=0000093e6f9d658353d8def21d98a5a5126a388a7c5987bce7cac4ccf5299dd0
@@ -203,21 +203,21 @@ newcoin_replace_vars()
     pushd $COIN_NAME_LOWER
 
     # first rename all directories
-    for i in $(find . -type d | grep -v "^./.git" | grep sov); do 
-        git mv $i $(echo $i| $SED "s/sov/$COIN_NAME_LOWER/")
+    for i in $(find . -type d | grep -v "^./.git" | grep litecoin); do 
+        git mv $i $(echo $i| $SED "s/sovcoin/$COIN_NAME_LOWER/")
     done
 
     # then rename all files
-    for i in $(find . -type f | grep -v "^./.git" | grep sov); do
-        git mv $i $(echo $i| $SED "s/sov/$COIN_NAME_LOWER/")
+    for i in $(find . -type f | grep -v "^./.git" | grep litecoin); do
+        git mv $i $(echo $i| $SED "s/sovcoin/$COIN_NAME_LOWER/")
     done
 
     # now replace all litecoin references to the new coin name
     for i in $(find . -type f | grep -v "^./.git"); do
-        $SED -i "s/Sov/$COIN_NAME/g" $i
-        $SED -i "s/sov/$COIN_NAME_LOWER/g" $i
-        $SED -i "s/SOV/$COIN_NAME_UPPER/g" $i
-        $SED -i "s/sovX/minblock/g" $i
+        $SED -i "s/Sovcoin/$COIN_NAME/g" $i
+        $SED -i "s/sovcoin/$COIN_NAME_LOWER/g" $i
+        $SED -i "s/SOVCOIN/$COIN_NAME_UPPER/g" $i
+        $SED -i "s/SovCoinX/minblock/g" $i
     done
 
     $SED -i "s/21000000/$TOTAL_SUPPLY/" src/amount.h
@@ -238,7 +238,7 @@ newcoin_replace_vars()
     $SED -i "0,/$LITECOIN_TEST_GENESIS_HASH/s//$TEST_GENESIS_HASH/" src/chainparams.cpp
     $SED -i "0,/$LITECOIN_REGTEST_GENESIS_HASH/s//$REGTEST_GENESIS_HASH/" src/chainparams.cpp
 
-    $SED -i "0,/2084524493/s//$MAIN_NONCE/" src/chainparams.cpp
+    $SED -i "0,/3765700/s//$MAIN_NONCE/" src/chainparams.cpp
     $SED -i "0,/293345/s//$TEST_NONCE/" src/chainparams.cpp
     $SED -i "0,/1296688602, 0/s//1296688602, $REGTEST_NONCE/" src/chainparams.cpp
     $SED -i "0,/0x1e0ffff0/s//$BITS/" src/chainparams.cpp
