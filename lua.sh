@@ -203,13 +203,13 @@ newcoin_replace_vars()
     pushd $COIN_NAME_LOWER
 
     # first rename all directories
-    for i in $(find . -type d | grep -v "^./.git" | grep sovcoin); do 
-        git mv $i $(echo $i| $SED "s/sovcoin/$COIN_NAME_LOWER/")
+    for i in $(find . -type d | grep -v "^./.git" | grep sov); do 
+        git mv $i $(echo $i| $SED "s/sov/$COIN_NAME_LOWER/")
     done
 
     # then rename all files
-    for i in $(find . -type f | grep -v "^./.git" | grep sovcoin); do
-        git mv $i $(echo $i| $SED "s/sovcoin/$COIN_NAME_LOWER/")
+    for i in $(find . -type f | grep -v "^./.git" | grep sov); do
+        git mv $i $(echo $i| $SED "s/sov/$COIN_NAME_LOWER/")
     done
 
     # now replace all litecoin references to the new coin name
