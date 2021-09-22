@@ -275,7 +275,7 @@ build_new_coin()
         docker_run "cd /$COIN_NAME_LOWER ; bash  /$COIN_NAME_LOWER/configure"
     fi
     # always build as the user could have manually changed some files
-    docker_run "cd /$COIN_NAME_LOWER ; make -j2"
+    docker_run "cd /$COIN_NAME_LOWER ; make -j12"
 }
 
 
