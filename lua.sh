@@ -3,12 +3,11 @@
 # brand new coin + blockchain.
 # The script will perform the following steps:
 # 1) create first a docker image with ubuntu ready to build and run the new coin daemon
-# 2) clone GenesisH0 and mine the genesis blocks of main, test and regtest networks in the container (this may take a lot of time)
 # 3) clone luascoin
 # 4) replace variables (keys, merkle tree hashes, timestamps..)
-# 5) build new coin
+# 5) replaces files and folders
 # 6) run 4 docker nodes and connect to each other
-# 
+# todo: include genesis hash mining 
 # By default the script uses the regtest network, which can mine blocks
 # instantly. If you wish to switch to the main network, simply change the 
 # CHAIN variable below
