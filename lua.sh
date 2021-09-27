@@ -30,7 +30,7 @@ COINBASE_MATURITY=25
 # leave CHAIN empty for main network, -regtest for regression network and -testnet for test network
 CHAIN=""
 # this is the amount of coins to get as a reward of mining the block of height 1. if not set this will default to 50
-PREMINED_AMOUNT=1000000
+PREMINED_AMOUNT=1000000 #preburn amount
 
 # warning: change this to your own pubkey to get the genesis block mining reward
 GENESIS_REWARD_PUBKEY=46e05270f6d736f006cb682c9e15998e3505e6185475f7e1a9bc5a4965984b6933ed8988336006ad07d0b5ae408bf5805183c5a94ab376d0e50f0c51ab30f6662
